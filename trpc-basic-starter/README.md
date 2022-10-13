@@ -3,7 +3,7 @@
 ## Local Setup + Development
 
 ```
-$ npx create-next-app --example https://github.com/webscopeio/examples/trpc-basic-starter trpc-basic-starter
+$ npx create-next-app --example https://github.com/webscopeio/examples/tree/main/trpc-basic-starter trpc-basic-starter
 $ cd [example]
 
 # <- Using `npm`
@@ -14,9 +14,7 @@ $ npm run dev
 $ yarn dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/webscopeio/examples/trpc-basic-starter?file=src/pages/index.tsx&file=src/server/routers/user.ts&view=editor)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/webscopeio/examples/trpc-basic-starter)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/webscopeio/examples/tree/main/trpc-basic-starter?file=src/pages/index.tsx&file=src/server/routers/user.ts&view=editor)
 
 Typesafety is the extent to which a programming language prevents type errors. The process of verifying and enforcing the constraints of types may occur at compile time or at run-time. A programming language like [TypeScript](https://typefully.com/) checks a program for errors before execution (at compile time) as a static type checker. In contrast, a library like [Zod](https://zod.dev/) can also provide you type checking at run-time. So how does a library like tRPC helps us better understand typesafety?
 
@@ -28,7 +26,7 @@ At its core, [tRPC](https://trpc.io/) provides the solution to statically type o
 
 Types are shared based on one or many _procedures_ contained in Routers. A **procedure** is a _composable_ query, mutation or subscription where you define how your client/server interact with each other.
 
-Let's see what you'd need to create a query procedure for a [Next.js application](https://trpc.io/docs/v10/nextjs). We'll explore these concepts by reviewing our [tRPC-basic-starter](https://github.com/webscopeio/examples/trpc-basic-starter) GH repo. Here's how our file structure initially looks like:
+Let's see what you'd need to create a query procedure for a [Next.js application](https://trpc.io/docs/v10/nextjs). We'll explore these concepts by reviewing our [tRPC-basic-starter](https://github.com/webscopeio/examples/tree/main/trpc-basic-starter) GH repo. Here's how our file structure initially looks like:
 
 ```graphql
 # @path: ./src
@@ -247,6 +245,4 @@ What's in it for you using tRPC? We barely scratched the surface, here are a lis
 
 Feel free to explore this example using the resources below:
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/webscopeio/examples/trpc-basic-starter?file=src/pages/index.tsx&file=src/server/routers/user.ts&view=editor)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/webscopeio/examples/trpc-basic-starter)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/webscopeio/examples/tree/main/trpc-basic-starter?file=src/pages/index.tsx&file=src/server/routers/user.ts&view=editor)

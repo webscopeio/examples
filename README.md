@@ -9,7 +9,7 @@ Use any of the options to run commands from your terminal:
 ```
 # Using GitHub CLI
 
-$ gh repo clone webscopeio/examples/[example]
+$ gh repo clone webscopeio/examples/tree/main/[example]
 $ cd [example]
 $ npm i
 $ npm run dev
@@ -18,7 +18,7 @@ $ npm run dev
 ```
 # For Next.js projects using `npm` or `yarn`
 
-$ npx create-next-app --example https://github.com/webscopeio/examples/[example] [example]
+$ npx create-next-app --example https://github.com/webscopeio/examples/tree/main/[example] [example]
 $ cd [example]
 
 # <- Using `npm`
@@ -29,9 +29,8 @@ $ npm run dev
 $ yarn dev
 ```
 
-## Remote Setup using StackBlitz/Vercel
+## Remote Setup using StackBlitz
 
 Using _Markdown syntax_ each of the example apps/starters should have the following:
 
--   [Launching projects from GitHub](https://developer.stackblitz.com/guides/integration/open-from-github#frontmatter-title) - using the following URI pattern: `stackblitz.com/github/REPOSITORY_PATH/?file=OPTIONAL_PARAMS` as an example: `https://stackblitz.com/github/webscopeio/examples/trpc-basic-starter?file=src/pages/index.tsx&file=src/server/routers/user.ts&view=editor`
--   [Deploy with Vercel](https://vercel.com/docs/deploy-button#introduction/what-s-a-deploy-button) - using the following URI pattern: `vercel.com/new/clone?repository-url=REPOSITORY_PATH` as an example: `https://vercel.com/new/clone?repository-url=https://github.com/webscopeio/examples/trpc-basic-starter`
+[Launching projects from GitHub](https://developer.stackblitz.com/guides/integration/open-from-github#frontmatter-title) - using the following URI pattern: `stackblitz.com/github/REPOSITORY_PATH/?file=OPTIONAL_PARAMS` as an example: `https://stackblitz.com/github/webscopeio/examples/tree/main/trpc-basic-starter?file=src/pages/index.tsx&file=src/server/routers/user.ts&view=editor`
