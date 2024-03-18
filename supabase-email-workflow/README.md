@@ -74,10 +74,7 @@ You can also add some of the Supabase CLI commands in your `package.json` for ea
 
 Go to Studio (using the Studio URL) and visit the Authentication page and click on "Add user" to send an invitation to any email. Once you have sent an invitation a new user will appear in a `Waiting for verification...` state.
 
-<figure>
-  <img src="assets/01-supabase-studio-invite-user.png" alt="Supabase Studio Invite User" />
-  <figcaption>Supabase Studio Invite User</figcaption>
-</figure>
+![Supabase Studio Invite User](assets/01-supabase-studio-invite-user.png "Supabase Studio Invite User")
 
 Go to Inbucket (using the Inbucket URL) and your recently sent email should appear in "Monitor" or you will be able to find it under "Recent Mailboxes".
 
