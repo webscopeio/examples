@@ -3,17 +3,18 @@
 Local Supabase development is highly recommended for creating robust and efficient project workflows. With a local-first approach you can: (a) develop faster without any network latency or disruptions and even completely offline; (b) spin up unlimited Supabase instances free-of-cost; and (c) rely on code-based configurations and migrations making it easier to collaborate with team members on the same project. If you haven't tried it yet, you can read more in [Local development - How to use Supabase on your local development machine](https://supabase.com/docs/guides/cli/local-development).
 
 Before getting started make sure that you:
-* Install globally or locally (as a dev dependency) [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) to run the development stack locally on your machine.
-* Install [Docker Desktop](https://docs.docker.com/desktop) to run the Docker containers required for the development stack.
+
+- Install globally or locally (as a dev dependency) [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) to run the development stack locally on your machine.
+- Install [Docker Desktop](https://docs.docker.com/desktop) to run the Docker containers required for the development stack.
 
 This guide assumes you are working with Supabase CLI as a dev dependency. If you already have it installed globally, you can run all of the CLI commands directly, i.e. (use `supabase init` instead of `pnpm supabase init`).
 
 This guide will help you build the following workflow:
+
 1. Run a local Supabase instance
 2. Run a local email development server using [React Email](https://react.email/docs/cli)
 3. Set your [CLI configuration](https://supabase.com/docs/guides/cli/config) `supabase/config.toml` to include your email templates
 4. Use [Inbucket](https://github.com/inbucket/inbucket) to capture emails sent from your local machine
-
 
 ## 1. Run a local Supabase instance
 
@@ -28,7 +29,7 @@ pnpm init
 # Install Supabase CLI as a dev dependency
 pnpm add -D supabase
 
-# Initialize and start 
+# Initialize and start
 pnpm supabase init
 pnpm supabase start
 ```
@@ -47,22 +48,24 @@ service_role key: eyJh......
 ```
 
 From all of these we will be using:
-* **Studio**: This container runs a web-based interface for managing your Supabase instance.
-* **Inbucket**: This container runs an email testing service; it will accept messages for any email address and make them available via web interface.
+
+- **Studio**: This container runs a web-based interface for managing your Supabase instance.
+- **Inbucket**: This container runs an email testing service; it will accept messages for any email address and make them available via web interface.
 
 ### Additional information about Supabase CLI
 
 What is good to know about the `supabase start` output:
-* The environment variables are hard-coded and safe to include in your `.env.example` file
-* You can use `supabase stop` at any time to stop all services (without resetting your local database). Use `supabase stop --no-backup` to stop all services and reset your local database
+
+- The environment variables are hard-coded and safe to include in your `.env.example` file
+- You can use `supabase stop` at any time to stop all services (without resetting your local database). Use `supabase stop --no-backup` to stop all services and reset your local database
 
 You can also add some of the Supabase CLI commands in your `package.json` for ease-of-use such as:
 
 ```json
 "scripts": {
-  "db:start": "supabase start", 
-  "db:stop": "supabase stop", 
-  "db:reset": "supabase db reset", 
+  "db:start": "supabase start",
+  "db:stop": "supabase stop",
+  "db:reset": "supabase db reset",
   "db:gen-types": "supabase gen types typescript --local > types/supabase.ts"
 }
 ```
@@ -71,13 +74,16 @@ You can also add some of the Supabase CLI commands in your `package.json` for ea
 
 Go to Studio (using the Studio URL) and visit the Authentication page and click on "Add user" to send an invitation to any email. Once you have sent an invitation a new user will appear in a `Waiting for verification...` state.
 
-![Supabase Studio Invite User](https://raw.githubusercontent.com/webscopeio/examples/main/supabase-email-workflow/public/01-supabase-studio-invite-user.png "Supabase Studio Invite User")
+<figure>
+  <img src="/assets/01-supabase-studio-invite-user.png" alt="Supabase Studio Invite User" />
+  <figcaption>Supabase Studio Invite User</figcaption>
+</figure>
 
 Go to Inbucket (using the Inbucket URL) and your recently sent email should appear in "Monitor" or you will be able to find it under "Recent Mailboxes".
 
 This is a fully functional email, but it isn't styled and it may not be the exact same email you want to send in production. Supabase Auth makes use of [Go Templates](https://pkg.go.dev/text/template) and you may be wanting to add more variables or add conditions based on the authentication method or user. You can read more about this in [Email Templates - Learn how to manage the email templates in Supabase](https://supabase.com/docs/guides/auth/auth-email-templates)
 
-![Supabase Default Invite Email Template](https://raw.githubusercontent.com/webscopeio/examples/main/supabase-email-workflow/public/02-supabase-default-invite-email-template.png "Supabase Default Invite Email Template")
+![Supabase Default Invite Email Template](/assets/02-supabase-default-invite-email-template.png "Supabase Default Invite Email Template")
 
 ## 2. Run a local email development server using React Email
 
@@ -114,7 +120,7 @@ pnpm email:dev
 pnpm email:export
 ```
 
-![React Email Development Server](https://raw.githubusercontent.com/webscopeio/examples/main/supabase-email-workflow/public/03-react-email-development-server.png "React Email Development Server")
+![React Email Development Server](/assets/03-react-email-development-server.png "React Email Development Server")
 
 Once you are happy with your template and are ready to test your emails with Inbucket. You should make sure they are available in `supabase/templates` after running `pnpm email:export`.
 
@@ -144,7 +150,7 @@ Remember, you will need to reset or restart your containers whenever the CLI con
 
 Now you can use Inbucket to test the email templates, use different email addresses, see how the variables are being loaded into the emails and test the different authentication flows. You should be able to see both the generated HTML and Plain Text from your email templates.
 
-![Supabase New Invite Email Template](https://raw.githubusercontent.com/webscopeio/examples/main/supabase-email-workflow/public/04-supabase-new-invite-email-template.png "Supabase New Invite Email Template")
+![Supabase New Invite Email Template](/assets/04-supabase-new-invite-email-template.png "Supabase New Invite Email Template")
 
 These settings are only for local development. To update your hosted project, please copy the templates from `supabase/templates` into the [Email Templates](https://arc.net/l/quote/kjchbwqk) section of the Dashboard.
 
@@ -154,10 +160,9 @@ Keep in mind that for your production application you should update your SMTP co
 
 To wrap up, integrating a local Supabase setup with an email workflow is a game-changer for development efficiency and effectiveness. Here's why this approach is a win-win:
 
-* **Rapid Developmen**: Eliminating network delays with local Supabase speeds up development, while direct email testing slashes time to perfect email communications.
-* **Cost-Effective**: Free unlimited Supabase instances keep your budget in check.
-* **Team Synergy**: Code configurations ease collaboration and version control, and streamlined email development aligns your team on user communication strategies.
-* **Quality Assurance**: With tools like React Email and Inbucket, you ensure your emails look great and work perfectly, enhancing the user experience.
-
+- **Rapid Developmen**: Eliminating network delays with local Supabase speeds up development, while direct email testing slashes time to perfect email communications.
+- **Cost-Effective**: Free unlimited Supabase instances keep your budget in check.
+- **Team Synergy**: Code configurations ease collaboration and version control, and streamlined email development aligns your team on user communication strategies.
+- **Quality Assurance**: With tools like React Email and Inbucket, you ensure your emails look great and work perfectly, enhancing the user experience.
 
 Embrace this setup to boost your project's development workflow and deliver outstanding email communication. Give it a go—your project (and inbox) will thank you.
