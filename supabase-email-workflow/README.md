@@ -75,7 +75,7 @@ You can also add some of the Supabase CLI commands in your `package.json` for ea
 Go to Studio (using the Studio URL) and visit the Authentication page and click on "Add user" to send an invitation to any email. Once you have sent an invitation a new user will appear in a `Waiting for verification...` state.
 
 <figure>
-  <img src="/assets/01-supabase-studio-invite-user.png" alt="Supabase Studio Invite User" />
+  <img src="assets/01-supabase-studio-invite-user.png" alt="Supabase Studio Invite User" />
   <figcaption>Supabase Studio Invite User</figcaption>
 </figure>
 
@@ -83,7 +83,7 @@ Go to Inbucket (using the Inbucket URL) and your recently sent email should appe
 
 This is a fully functional email, but it isn't styled and it may not be the exact same email you want to send in production. Supabase Auth makes use of [Go Templates](https://pkg.go.dev/text/template) and you may be wanting to add more variables or add conditions based on the authentication method or user. You can read more about this in [Email Templates - Learn how to manage the email templates in Supabase](https://supabase.com/docs/guides/auth/auth-email-templates)
 
-![Supabase Default Invite Email Template](/assets/02-supabase-default-invite-email-template.png "Supabase Default Invite Email Template")
+![Supabase Default Invite Email Template](assets/02-supabase-default-invite-email-template.png "Supabase Default Invite Email Template")
 
 ## 2. Run a local email development server using React Email
 
@@ -120,7 +120,7 @@ pnpm email:dev
 pnpm email:export
 ```
 
-![React Email Development Server](/assets/03-react-email-development-server.png "React Email Development Server")
+![React Email Development Server](assets/03-react-email-development-server.png "React Email Development Server")
 
 Once you are happy with your template and are ready to test your emails with Inbucket. You should make sure they are available in `supabase/templates` after running `pnpm email:export`.
 
@@ -150,7 +150,7 @@ Remember, you will need to reset or restart your containers whenever the CLI con
 
 Now you can use Inbucket to test the email templates, use different email addresses, see how the variables are being loaded into the emails and test the different authentication flows. You should be able to see both the generated HTML and Plain Text from your email templates.
 
-![Supabase New Invite Email Template](/assets/04-supabase-new-invite-email-template.png "Supabase New Invite Email Template")
+![Supabase New Invite Email Template](assets/04-supabase-new-invite-email-template.png "Supabase New Invite Email Template")
 
 These settings are only for local development. To update your hosted project, please copy the templates from `supabase/templates` into the [Email Templates](https://arc.net/l/quote/kjchbwqk) section of the Dashboard.
 
