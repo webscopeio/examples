@@ -47,7 +47,7 @@ export const ContactForm: React.FC = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(mutate)} className="space-y-6 w-full">
+      <form onSubmit={form.handleSubmit(mutate)} className="w-full space-y-6">
         <h1 className="text-3xl font-semibold tracking-tight">Contact us</h1>
         <FormField
           control={form.control}
