@@ -1,4 +1,4 @@
-// pnpm add -D eslint-plugin-import eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-tailwindcss
+// pnpm add -D eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-tailwindcss eslint-plugin-import
 {
   "extends": [
     "next/core-web-vitals",
@@ -12,7 +12,11 @@
     "react/display-name": "off",
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
-    "tailwindcss/no-custom-classname": "off"
+    "tailwindcss/no-custom-classname": "off",
+    "import/order": [
+      "error",
+      { "alphabetize": { "order": "asc", "caseInsensitive": true } }
+    ]
   },
   "settings": {
     "tailwindcss": {

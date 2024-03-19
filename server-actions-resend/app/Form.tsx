@@ -1,9 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2Icon, RotateCwIcon } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { sendEmail } from "./actions";
+import { FormFields, formSchema } from "./types";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,19 +18,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { sendEmail } from "./actions";
-import { toast } from "sonner";
-import { Loader2Icon, RotateCwIcon } from "lucide-react";
-import { useMutation } from "@/lib/utils";
-import { FormFields, formSchema } from "./types";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@/lib/utils";
 
-export const ContactForm: React.FC = () => {
+export const ContactForm: React.FC<Partial<FormFields>> = ({
+  email,
+  message,
+}) => {
   const form = useForm<FormFields>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      message: "",
+      email: email ?? "",
+      message: message ?? "",
     },
   });
 
