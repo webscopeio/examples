@@ -29,7 +29,9 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {children}
+        <main className="mx-auto min-h-screen max-w-xl px-6 py-12">
+          {children}
+        </main>
         <Toaster />
       </body>
     </html>

@@ -1,8 +1,13 @@
 import { z } from "zod";
 
-export const formSchema = z.object({
-  email: z.string().email(),
-  message: z.string().min(3).max(100),
+export interface UsernameRequest {
+  username: string;
+  status: "Pending" | "Error" | "Requested" | "Approved" | "Rejected";
+}
+
+export const usernameRequestForm = z.object({
+  username: z.string().min(3),
 });
 
-export interface FormFields extends z.infer<typeof formSchema> {}
+export interface UsernameRequestForm
+  extends z.infer<typeof usernameRequestForm> {}

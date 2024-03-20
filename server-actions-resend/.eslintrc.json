@@ -1,5 +1,9 @@
 // pnpm add -D eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-tailwindcss eslint-plugin-import
 {
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": true
+  },
   "extends": [
     "next/core-web-vitals",
     "plugin:react/recommended",
@@ -7,7 +11,6 @@
     "plugin:tailwindcss/recommended",
     "plugin:import/recommended"
   ],
-  "root": true,
   "rules": {
     "react/display-name": "off",
     "react/prop-types": "off",

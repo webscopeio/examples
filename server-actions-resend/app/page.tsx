@@ -1,9 +1,21 @@
-import { ContactForm } from "./Form";
+"use client";
+
+import * as React from "react";
+import { RequestForm } from "./request-form";
+import type { UsernameRequest } from "./types";
+
+const historicalRequests: UsernameRequest[] = [
+  {
+    username: "hectorsosa",
+    status: "Requested",
+  },
+  {
+    username: "sosahm",
+    status: "Pending",
+  },
+];
 
 export default function Home() {
-  return (
-    <main className="mx-auto min-h-screen max-w-lg px-6 py-12">
-      <ContactForm />
-    </main>
-  );
+  const [requests, setRequests] = React.useState(historicalRequests);
+  return <RequestForm requests={requests} setRequests={setRequests} />;
 }

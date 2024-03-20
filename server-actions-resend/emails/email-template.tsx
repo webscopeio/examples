@@ -12,33 +12,29 @@ import {
   Text,
 } from "@react-email/components";
 import * as React from "react";
-import { FormFields } from "@/app/types";
+import { UsernameRequestForm } from "@/app/types";
 
-const EmailTemplate: React.FC<FormFields> = ({
-  email = "sosa@webscope.io",
-  message = "This is a placeholder for the message",
+const EmailTemplate: React.FC<UsernameRequestForm> = ({
+  username = "iamhectorsosa",
 }) => {
   return (
     <Html>
       <Head />
-      <Preview>Message received</Preview>
+      <Preview>Username request received</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Message received</Heading>
+          <Heading style={h1}>Username request received</Heading>
           <Text style={text}>
-            Thank you for reaching out! Here is the message you left:
+            You have requested to claim the following username:
           </Text>
-          <Text style={messageBox}>{message}</Text>
-          <Text style={text}>
-            We will reach out shortly back to: <strong>{email}</strong>
-          </Text>
-          <Text style={text}>Missing something? Send us another message:</Text>
+          <Text style={messageBox}>@{username}</Text>
+          <Text style={text}>Is there a mistake? Send us another request:</Text>
           <Section style={buttonContainer}>
             <Button
               style={button}
               href="https://github.com/webscopeio/examples/tree/main/server-actions-resend"
             >
-              Send message
+              Claim username
             </Button>
           </Section>
           <Hr style={hr} />
