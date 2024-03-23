@@ -21,6 +21,8 @@ In the context of a Next application, chances are that, you are or should be wor
 
 Behind the scenes, Server Actions use the POST method, and only this HTTP method is allowed to invoke them. This prevents most CSRF vulnerabilities in modern browsers. Server Actions in Next also compare request headers. If these don't match, the request will be aborted. In other words, Server Actions can only be invoked on the same host as the page that hosts it. A deeper read can be referenced in Sebastian Markbåge's [How to Think About Security in Next.js](https://nextjs.org/blog/security-nextjs-server-components-actions)
 
+![Server Actions Network Request](/assets/server-actions-network-request.png "Server Actions Network Request")
+
 ## Putting everything together
 
 ### Schema Validation

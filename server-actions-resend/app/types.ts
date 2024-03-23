@@ -2,11 +2,11 @@ import { z } from "zod";
 
 export interface UsernameRequest {
   username: string;
-  status: "Pending" | "Error" | "Requested" | "Approved" | "Rejected";
+  status: "Pending" | "Error" | "Requested";
 }
 
 export const usernameRequestForm = z.object({
   username: z.string().min(3),
 });
 
-export type UsernameRequestForm = z.infer<typeof usernameRequestForm>
+export type UsernameRequestForm = z.infer<typeof usernameRequestForm>;

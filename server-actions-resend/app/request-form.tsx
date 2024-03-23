@@ -42,6 +42,8 @@ export const RequestForm: React.FC<{
     },
   });
 
+  const [isPendingTransition, startTransition] = React.useTransition();
+
   const [optimisticRequests, addOptimisticRequest] = React.useOptimistic<
     UsernameRequest[],
     { username: string }
@@ -53,10 +55,15 @@ export const RequestForm: React.FC<{
     },
   ]);
 
-  const { isPending, isError, mutate } = useMutation({
+  const { isPending, isError, mutateAsync } = useMutation({
     mutationFn: sendContactFormEmail,
-    onSuccess: (data) => {
-      if (data) {
+  });
+
+  function handleSubmitWithMutation(values: UsernameRequestForm) {
+    addOptimisticRequest(values);
+    toast.promise(mutateAsync(values), {
+      loading: `Submitting a claim for @${values.username}`,
+      success: (data) => {
         // form.reset();
         setRequests([
           ...requests,
@@ -65,66 +72,23 @@ export const RequestForm: React.FC<{
             status: "Requested",
           },
         ]);
-        toast.success(
-          `You have successfully submitted a claim for: @${data.username}`
-        );
-      }
-    },
-    onError: (error, variables) => {
-      setRequests([
-        ...requests,
-        {
-          username: variables.username,
-          status: "Error",
-        },
-      ]);
-      toast.error(error.message);
-    },
-  });
-
-  const [isPendingTransition, startTransition] = React.useTransition();
-
-  const [isPendingOptimistic, startOptimisticTransition] =
-    React.useTransition();
-
-  function handleSubmitWithTransition(values: UsernameRequestForm) {
-    setRequests([
-      ...requests,
-      {
-        ...values,
-        status: "Pending",
+        return `You have successfully submitted a claim for: @${data.username}`;
       },
-    ]);
-    startTransition(() => {
-      toast.promise(sendContactFormEmail(values), {
-        loading: `Submitting a claim for @${values.username}`,
-        success: (data) => {
-          // form.reset();
-          setRequests([
-            ...requests,
-            {
-              ...data,
-              status: "Requested",
-            },
-          ]);
-          return `You have successfully submitted a claim for: @${data.username}`;
-        },
-        error: (error) => {
-          setRequests([
-            ...requests,
-            {
-              username: values.username,
-              status: "Error",
-            },
-          ]);
-          return error instanceof Error ? error.message : "Unknown error";
-        },
-      });
+      error: (error) => {
+        setRequests([
+          ...requests,
+          {
+            username: values.username,
+            status: "Error",
+          },
+        ]);
+        return error instanceof Error ? error.message : "Unknown error";
+      },
     });
   }
 
   function handleSubmitWithOptimistic(values: UsernameRequestForm) {
-    startOptimisticTransition(() => {
+    startTransition(() => {
       addOptimisticRequest(values);
       toast.promise(sendContactFormEmail(values), {
         loading: `Submitting a claim for @${values.username}`,
@@ -162,16 +126,7 @@ export const RequestForm: React.FC<{
         <Form {...form}>
           <form
             action={async () => {
-              await form.handleSubmit((values) => {
-                setRequests([
-                  ...requests,
-                  {
-                    ...values,
-                    status: "Pending",
-                  },
-                ]);
-                mutate(values);
-              })();
+              await form.handleSubmit(handleSubmitWithMutation)();
             }}
             className="w-full space-y-6"
           >
@@ -210,31 +165,27 @@ export const RequestForm: React.FC<{
                 type="button"
                 onClick={(e) =>
                   form.handleSubmit((values) => {
-                    handleSubmitWithTransition(values);
+                    handleSubmitWithOptimistic(values);
                   })(e)
                 }
                 disabled={isPendingTransition}
                 data-loading={isPendingTransition}
-                className="group"
-                variant="secondary"
-              >
-                <Loader2Icon className="mr-2 hidden size-4 animate-spin group-data-[loading=true]:block" />
-                Use Transition
-              </Button>
-              <Button
-                type="button"
-                onClick={(e) =>
-                  form.handleSubmit((values) => {
-                    handleSubmitWithOptimistic(values);
-                  })(e)
+                data-error={requests.at(-1)?.status === "Error"}
+                variant={
+                  requests.at(-1)?.status === "Error"
+                    ? "destructive"
+                    : "secondary"
                 }
-                disabled={isPendingOptimistic}
-                data-loading={isPendingOptimistic}
                 className="group"
-                variant="ghost"
               >
                 <Loader2Icon className="mr-2 hidden size-4 animate-spin group-data-[loading=true]:block" />
-                Use Optismistic
+                <RotateCwIcon className="mr-2 hidden size-4 group-data-[error=true]:block" />
+                <span className="hidden group-data-[error=true]:block">
+                  Retry
+                </span>
+                <span className="hidden group-data-[error=false]:block">
+                  Use Optimistic
+                </span>
               </Button>
             </div>
           </form>
@@ -244,24 +195,30 @@ export const RequestForm: React.FC<{
         <h1 className="text-xl font-semibold tracking-tight">
           Historical requests
         </h1>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Username</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {optimisticRequests.map((request, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium">
-                  @{request.username}
-                </TableCell>
-                <TableCell>{request.status}</TableCell>
+        {optimisticRequests.length === 0 ? (
+          <div className="w-full text-center">
+            <p className="text-sm text-muted-foreground">Submit a Request</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Username</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {optimisticRequests.map((request, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">
+                    @{request.username}
+                  </TableCell>
+                  <TableCell>{request.status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </div>
     </div>
   );

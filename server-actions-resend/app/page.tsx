@@ -4,16 +4,7 @@ import * as React from "react";
 import { RequestForm } from "./request-form";
 import type { UsernameRequest } from "./types";
 
-const historicalRequests: UsernameRequest[] = [
-  {
-    username: "hectorsosa",
-    status: "Requested",
-  },
-  {
-    username: "sosahm",
-    status: "Pending",
-  },
-];
+const historicalRequests: UsernameRequest[] = [];
 
 export default function Home() {
   const [requests, setRequests] = React.useState(historicalRequests);
