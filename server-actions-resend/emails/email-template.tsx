@@ -1,3 +1,5 @@
+import * as React from "react";
+import { UsernameRequestForm } from "@/app/types";
 import {
   Body,
   Button,
@@ -11,8 +13,6 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import * as React from "react";
-import { UsernameRequestForm } from "@/app/types";
 
 const EmailTemplate: React.FC<UsernameRequestForm> = ({
   username = "iamhectorsosa",

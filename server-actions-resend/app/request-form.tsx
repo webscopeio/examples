@@ -1,19 +1,13 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { Loader2Icon, RotateCwIcon } from "lucide-react";
 import * as React from "react";
-import { useForm } from "react-hook-form";
-
-import { toast } from "sonner";
-import { sendContactFormEmail } from "./actions";
-import {
-  UsernameRequest,
-  type UsernameRequestForm,
-  usernameRequestForm,
-} from "./types";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { sendContactFormEmail } from "./actions";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -22,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Loader2Icon, RotateCwIcon } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -31,6 +25,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  UsernameRequest,
+  type UsernameRequestForm,
+  usernameRequestForm,
+} from "./types";
 
 export const RequestForm: React.FC<{
   requests: UsernameRequest[];
@@ -96,7 +95,7 @@ export const RequestForm: React.FC<{
         status: "Pending",
       },
     ]);
-    startTransition(async () => {
+    startTransition(() => {
       toast.promise(sendContactFormEmail(values), {
         loading: `Submitting a claim for @${values.username}`,
         success: (data) => {
@@ -125,7 +124,7 @@ export const RequestForm: React.FC<{
   }
 
   function handleSubmitWithOptimistic(values: UsernameRequestForm) {
-    startOptimisticTransition(async () => {
+    startOptimisticTransition(() => {
       addOptimisticRequest(values);
       toast.promise(sendContactFormEmail(values), {
         loading: `Submitting a claim for @${values.username}`,
@@ -162,8 +161,8 @@ export const RequestForm: React.FC<{
         </h1>
         <Form {...form}>
           <form
-            action={() => {
-              form.handleSubmit((values) => {
+            action={async () => {
+              await form.handleSubmit((values) => {
                 setRequests([
                   ...requests,
                   {
