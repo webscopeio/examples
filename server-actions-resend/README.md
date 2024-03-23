@@ -8,14 +8,15 @@ Today we will explore how to leverage Server Actions to send emails using [Next]
 
 To send emails, your UI would typically have to trigger a POST request to an API endpoint. This would require setting up logic from both sides to send, manage states, process your request and provide an approriate response.
 
-React's new `'use server'` directive makes this entire process easier if you need to setup email delivery fast. No API endpoints needed, you just *call a Server Action and you are done*.
+React's new `'use server'` directive makes this entire process easier if you need to setup email delivery fast. No API endpoints needed, you just _call a Server Action and you are done_.
 
 ## Getting started
 
 In the context of a Next application, chances are that, you are or should be working with the following dependencies:
-* [shadcn/ui](https://ui.shadcn.com/) Form Component which in turn includes dependencies such as [Zod](https://zod.dev/) for schema validation and static type inference and [React Hook Form](https://react-hook-form.com/) for the forms themselves
-* [TanStack Query](https://tanstack.com/query/latest) for asynchronous state management
-* [Resend](https://resend.com/) for sending the emails with [React Email](https://react.email/) or a component library such as [MailingUI](https://mailingui.com) for email templates.
+
+- [shadcn/ui](https://ui.shadcn.com/) Form Component which in turn includes dependencies such as [Zod](https://zod.dev/) for schema validation and static type inference and [React Hook Form](https://react-hook-form.com/) for the forms themselves
+- [TanStack Query](https://tanstack.com/query/latest) for asynchronous state management
+- [Resend](https://resend.com/) for sending the emails with [React Email](https://react.email/) or a component library such as [MailingUI](https://mailingui.com) for email templates.
 
 ## Is it safe to use Server Actions for this?
 
@@ -25,50 +26,64 @@ Behind the scenes, Server Actions use the POST method, and only this HTTP method
 
 ## Putting everything together
 
+Let's build a simple UI that will allow users to claim a username.
+
 ### Schema Validation
 
 Personally I like starting with my type definitions. Keeping everything incredibly simple, let's set up a schema:
 
-``` ts
+```ts
 import { z } from "zod";
 
-export const formSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  notes: z
-    .string()
-    .optional(),
+export const usernameRequestForm = z.object({
+  username: z.string().min(3),
 });
 
-export type Form = z.infer<typeof formSchema>;
+export type UsernameRequestForm = z.infer<typeof usernameRequestForm>;
 ```
+
 ### Form UI
 
-Then set up your Form UI component to allow extendable input defaults using your resolver and type definition from your previous schema.
+Then set up your Form component using your resolver and type definition from your schema.
 
 ```tsx
-"use client";
-
-export const ContactForm: React.FC<Partial<Form>> = (
-  defaultValues
-) => {
-  const form = useForm<Form>({
-    resolver: zodResolver(formSchema),
-    defaultValues,
+export const RequestForm: React.FC = () => {
+  const form = useForm<UsernameRequestForm>({
+    resolver: zodResolver(usernameRequestForm),
+    defaultValues: {
+      username: "",
+    },
   });
-
-  return (
-    <Form {...form}>
-      <form
-        // TODO: Connect Server Action
-        onSubmit={form.handleSubmit((values) => console.log(values))}
-      >
   // ...
 ```
 
-Notice how *each of the form properties become component props*. This is a useful pattern because it allows for flexibility in consuming your component. You can design an extendible form and use it in different locatons with different default values.
+At form submission React Hook Form uses the schema defined to validate the form values. Using its `handleSubmit` method you are able to provide an `onValid` and/or `onInvalid` callbacks using the parsed values.
 
-At form submission React Hook Form uses the schema defined to validate the form values and through its `handleSubmit` method it provides a `onValid` callback to use the parsed values. For now we are console logging them.
+Typically you would define an `onSubmit` function and provide in the form's `onSubmit` attribute. However, you can invoke the `handleSubmit` method outside of the `onSubmit` attribute. Here are several examples:
+
+#### Using `onSubmit` attribute
+
+This is how [ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form) is used.
+
+```tsx
+<form onSubmit={form.handleSubmit(onSubmit)} />
+```
+
+#### Using `action` attribute
+
+If you are using `react-hook-form`, this doesn't mean that you cannot make use of the `action` attribute.
+
+```tsx
+<form action={async () => await form.handleSubmit(onSubmit)()} />
+```
+
+#### Using a button's `onClick` handler
+
+Or if you have different triggers in your form, you can also use a button.
+
+```tsx
+<Button type="button" onClick={() => form.handleSubmit(onSubmit)()} />
+```
 
 ### Server Action
 
@@ -99,19 +114,21 @@ Resend's SDK returns a `data` and `error` response in `CreateEmailResponse`. How
 ### Handling States
 
 Since Server Actions are just functions, it is up to us to handle states in our UI to provide an appropriate feedback to our user. These are roughly the states the UI needs:
-* A `isPending` state while the Server Action is being processed.
-* A `isError` state if the Server Action responds with an error.
+
+- A `isPending` state while the Server Action is being processed.
+- A `isError` state if the Server Action responds with an error.
 
 Good to have are the following callbacks:
-* A `onSuccess` callback once the Server Action is successful.
-* A `onError` callback if the Server actions response with an error for next steps.
+
+- A `onSuccess` callback once the Server Action is successful.
+- A `onError` callback if the Server actions response with an error for next steps.
 
 Doesn't this sound like a perfect case for [TanStack Query](https://tanstack.com/query/latest)? Read their docs in [Mutations Guide](https://tanstack.com/query/latest/docs/framework/react/guides/mutations) for more information.
 
 Following our example, this is how that would look like:
 
 ```tsx
- const { isPending, isError, mutate } = useMutation({
+const { isPending, isError, mutate } = useMutation({
   mutationFn: sendEmail,
   onSuccess: (_, variables) => {
     toast.success("Email sent!", {
@@ -126,7 +143,7 @@ Following our example, this is how that would look like:
 });
 ```
 
-This gives us everything we need to process our request and handle our UI states. 
+This gives us everything we need to process our request and handle our UI states.
 
 ### What if you are not using TanStack Query
 
@@ -168,13 +185,12 @@ export function useServerFunction<TVariables, TData>(
 
 ## Will you give Server Actions a try?
 
-
 React's Server Actions fundamentally streamline the implementation of email functionalities in web applications, making it a highly efficient and reliable solution. This guided example not only demonstrates the process from schema validation to state management but also emphasizes the ease of integration with essential web development tools, illustrating a holistic approach to modern web application development.
 
-* **Simplified Process**: The introduction of Server Actions eradicates the necessity for back-and-forth logic between client and server to manage email sending, state processing, and response handling. By directly calling a Server Action, developers can swiftly set up email delivery mechanisms.
+- **Simplified Process**: The introduction of Server Actions eradicates the necessity for back-and-forth logic between client and server to manage email sending, state processing, and response handling. By directly calling a Server Action, developers can swiftly set up email delivery mechanisms.
 
-* **Reliable Security**: The security measures built into Server Actions, such as the exclusive use of the POST method and header verification to prevent CSRF vulnerabilities, offer a reliable security framework. This ensures that Server Actions are securely invoked only from the same host, minimizing potential security threats.
+- **Reliable Security**: The security measures built into Server Actions, such as the exclusive use of the POST method and header verification to prevent CSRF vulnerabilities, offer a reliable security framework. This ensures that Server Actions are securely invoked only from the same host, minimizing potential security threats.
 
-* **State Handling and Flexibility**: Handling UI states is crucial in providing user feedback. The use of TanStack Query, as recommended, facilitates this by offering a structured approach to mutations and state management.
+- **State Handling and Flexibility**: Handling UI states is crucial in providing user feedback. The use of TanStack Query, as recommended, facilitates this by offering a structured approach to mutations and state management.
 
 So will you give Server Actions a try? Let us know why or why not and have fun! Thanks for reading!

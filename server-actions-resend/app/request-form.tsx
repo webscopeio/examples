@@ -163,11 +163,7 @@ export const RequestForm: React.FC<{
               </Button>
               <Button
                 type="button"
-                onClick={(e) =>
-                  form.handleSubmit((values) => {
-                    handleSubmitWithOptimistic(values);
-                  })(e)
-                }
+                onClick={() => form.handleSubmit(handleSubmitWithOptimistic)()}
                 disabled={isPendingTransition}
                 data-loading={isPendingTransition}
                 data-error={requests.at(-1)?.status === "Error"}
