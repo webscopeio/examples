@@ -153,7 +153,7 @@ These settings are only for local development. To update your hosted project, pl
 
 Keep in mind that for your production application you should update your SMTP configuration to use a service such as [Resend](https://resend.com). You can read more about this process in their guide [Supabase with SMTP](https://resend.com/docs/send-with-supabase-smtp)
 
-## Main takeaway
+## Main takeaways
 
 To wrap up, integrating a local Supabase setup with an email workflow is a game-changer for development efficiency and effectiveness. Here's why this approach is a win-win:
 
@@ -162,4 +162,4 @@ To wrap up, integrating a local Supabase setup with an email workflow is a game-
 - **Team Synergy**: Code configurations ease collaboration and version control, and streamlined email development aligns your team on user communication strategies.
 - **Quality Assurance**: With tools like React Email and Inbucket, you ensure your emails look great and work perfectly, enhancing the user experience.
 
-Embrace this setup to boost your project's development workflow and deliver outstanding email communication. Give it a go—your project (and inbox) will thank you.
+Embrace this setup to boost your project's development workflow and deliver outstanding email communication. Give it a go, your project (and inbox) will thank you.
