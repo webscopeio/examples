@@ -22,7 +22,7 @@ In the context of a Next application, chances are that, you are or should be wor
 
 Behind the scenes, Server Actions use the POST method, and only this HTTP method is allowed to invoke them. This prevents most CSRF vulnerabilities in modern browsers. Server Actions in Next also compare request headers. If these don't match, the request will be aborted. In other words, Server Actions can only be invoked on the same host as the page that hosts it.
 
-![Server Actions Network Request](/assets/server-actions-network-request.png "Server Actions Network Request")
+![Server Actions Network Request](assets/server-actions-network-request.png "Server Actions Network Request")
 
 A deeper read can be referenced in Sebastian Markbåge's [How to Think About Security in Next.js](https://nextjs.org/blog/security-nextjs-server-components-actions)
 
@@ -135,7 +135,7 @@ Since Server Actions are just functions, it is up to us to handle states in our 
 - A `isPending` state while the Server Action is being processed.
 - A `isError` state if the Server Action responds with an error.
 
-![Displaying a Loading State](/assets/loading-state.png "Displaying a Loading State")
+![Displaying a Loading State](assets/loading-state.png "Displaying a Loading State")
 
 Good to have are the following side-effects:
 
@@ -143,7 +143,7 @@ Good to have are the following side-effects:
 - A `onError` callback if the Server actions response with an error for next steps.
 
 
-![Displaying a Error State](/assets/error-state.png "Displaying a Error State")
+![Displaying a Error State](assets/error-state.png "Displaying a Error State")
 
 Doesn't this sound like a perfect case for [TanStack Query](https://tanstack.com/query/latest)? Read their docs in [Mutations Guide](https://tanstack.com/query/latest/docs/framework/react/guides/mutations) for more information.
 
