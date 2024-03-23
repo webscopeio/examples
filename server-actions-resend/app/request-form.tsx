@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Loader2Icon, RotateCwIcon } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +31,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useMutation } from "@/lib/utils";
 
 export const RequestForm: React.FC<{
   requests: UsernameRequest[];

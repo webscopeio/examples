@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import * as React from "react";
 import "./globals.css";
 
+import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
@@ -25,14 +26,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "bg-background min-h-screen font-sans antialiased",
           fontSans.variable
         )}
       >
-        <main className="mx-auto min-h-screen max-w-xl px-6 py-12">
-          {children}
-        </main>
-        <Toaster />
+        <Providers>
+          <main className="mx-auto min-h-screen max-w-xl px-6 py-12">
+            {children}
+          </main>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
