@@ -10,10 +10,10 @@ import type { UsernameRequestForm } from "./types";
 //   return "sosa@webscope.io";
 // }
 
-export async function sendContactFormEmail(form: UsernameRequestForm) {
+export async function claimUsername(form: UsernameRequestForm) {
   // const userEmail = getCurrentUser();
   // const { error } = await resend.emails.send({
-  //   from: "Hector from webscope.io <sosa@webscope.io>",
+  //   from: "From webscope.io <hello@webscope.io>",
   //   to: [userEmail],
   //   subject: "Thank you for your message!",
   //   text: "We will reach out to you shortly",

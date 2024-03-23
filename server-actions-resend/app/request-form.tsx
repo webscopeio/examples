@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { claimUsername } from "./actions";
 import { Input } from "@/components/ui/input";
-import { sendContactFormEmail } from "./actions";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -56,7 +56,7 @@ export const RequestForm: React.FC<{
   ]);
 
   const { isPending, isError, mutateAsync } = useMutation({
-    mutationFn: sendContactFormEmail,
+    mutationFn: claimUsername,
   });
 
   function handleSubmitWithMutation(values: UsernameRequestForm) {
@@ -90,7 +90,7 @@ export const RequestForm: React.FC<{
   function handleSubmitWithOptimistic(values: UsernameRequestForm) {
     startTransition(() => {
       addOptimisticRequest(values);
-      toast.promise(sendContactFormEmail(values), {
+      toast.promise(claimUsername(values), {
         loading: `Submitting a claim for @${values.username}`,
         success: (data) => {
           // form.reset();

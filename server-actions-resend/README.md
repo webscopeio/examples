@@ -20,9 +20,11 @@ In the context of a Next application, chances are that, you are or should be wor
 
 ## Is it safe to use Server Actions for this?
 
-Behind the scenes, Server Actions use the POST method, and only this HTTP method is allowed to invoke them. This prevents most CSRF vulnerabilities in modern browsers. Server Actions in Next also compare request headers. If these don't match, the request will be aborted. In other words, Server Actions can only be invoked on the same host as the page that hosts it. A deeper read can be referenced in Sebastian Markbåge's [How to Think About Security in Next.js](https://nextjs.org/blog/security-nextjs-server-components-actions)
+Behind the scenes, Server Actions use the POST method, and only this HTTP method is allowed to invoke them. This prevents most CSRF vulnerabilities in modern browsers. Server Actions in Next also compare request headers. If these don't match, the request will be aborted. In other words, Server Actions can only be invoked on the same host as the page that hosts it.
 
 ![Server Actions Network Request](/assets/server-actions-network-request.png "Server Actions Network Request")
+
+A deeper read can be referenced in Sebastian Markbåge's [How to Think About Security in Next.js](https://nextjs.org/blog/security-nextjs-server-components-actions)
 
 ## Putting everything together
 
@@ -42,9 +44,9 @@ export const usernameRequestForm = z.object({
 export type UsernameRequestForm = z.infer<typeof usernameRequestForm>;
 ```
 
-### Form UI
+### Building our UI
 
-Then set up your Form component using your resolver and type definition from your schema.
+Let's set up your Form component using your resolver and type definition from your schema. To show an example of optimistic updates we will also display a list of requests below the form.
 
 ```tsx
 export const RequestForm: React.FC = () => {
@@ -59,7 +61,7 @@ export const RequestForm: React.FC = () => {
 
 At form submission React Hook Form uses the schema defined to validate the form values. Using its `handleSubmit` method you are able to provide an `onValid` and/or `onInvalid` callbacks using the parsed values.
 
-Typically you would define an `onSubmit` function and provide in the form's `onSubmit` attribute. However, you can invoke the `handleSubmit` method outside of the `onSubmit` attribute. Here are several examples:
+Typically you would define an `onSubmit` function and provide in the form's `onSubmit` attribute. However, you can invoke the `handleSubmit` method outside of the `onSubmit` attribute. Here are some examples:
 
 #### Using `onSubmit` attribute
 
@@ -79,25 +81,38 @@ If you are using `react-hook-form`, this doesn't mean that you cannot make use o
 
 #### Using a button's `onClick` handler
 
-Or if you have different triggers in your form, you can also use a button.
+Or if you have different triggers in your form (i.e., a draft and save action), you can also use a button.
 
 ```tsx
 <Button type="button" onClick={() => form.handleSubmit(onSubmit)()} />
 ```
 
-### Server Action
+We will be using a combination of these to showcase differents ways of using this structure with Server Actions.
+
+### Server Actions
 
 To call a Server Action in a Client Component, create a new file and add the `"use server"` directive at the top of it. All functions within the file will be marked as Server Actions that can be reused in both Client and Server Components.
+
+To follow our example, we will send the user a confirmation via email after the request has been processed:
 
 ```ts
 "use server";
 
+import EmailTemplate from "@/emails/email-template";
+import { Resend } from "resend";
+import type { UsernameRequestForm } from "./types";
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmail(form: Form): Promise<void> {
+function getCurrentUser() {
+  return "sosa@webscope.io";
+}
+
+export async function claimUsername(form: UsernameRequestForm) {
+  const userEmail = getCurrentUser();
   const { error } = await resend.emails.send({
-    from: "Hector from webscope.io <sosa@webscope.io>",
-    to: [form.email],
+    from: "From webscope.io <info@webscope.io>",
+    to: [userEmail],
     subject: "Thank you for your message!",
     text: "We will reach out to you shortly",
     react: EmailTemplate(form),
@@ -106,6 +121,8 @@ export async function sendEmail(form: Form): Promise<void> {
   if (error) {
     throw error;
   }
+
+  return form;
 }
 ```
 
@@ -118,10 +135,15 @@ Since Server Actions are just functions, it is up to us to handle states in our 
 - A `isPending` state while the Server Action is being processed.
 - A `isError` state if the Server Action responds with an error.
 
-Good to have are the following callbacks:
+![Displaying a Loading State](/assets/loading-state.png "Displaying a Loading State")
+
+Good to have are the following side-effects:
 
 - A `onSuccess` callback once the Server Action is successful.
 - A `onError` callback if the Server actions response with an error for next steps.
+
+
+![Displaying a Error State](/assets/error-state.png "Displaying a Error State")
 
 Doesn't this sound like a perfect case for [TanStack Query](https://tanstack.com/query/latest)? Read their docs in [Mutations Guide](https://tanstack.com/query/latest/docs/framework/react/guides/mutations) for more information.
 
@@ -145,43 +167,69 @@ const { isPending, isError, mutate } = useMutation({
 
 This gives us everything we need to process our request and handle our UI states.
 
-### What if you are not using TanStack Query
+We can also make use of an async mutation to provide immediate feedback using a promise `toast`:
 
-This would be a mistake. However, just for the fun of it, if your project is not using TanStack Query or this is the only use case for it here's a drop-in replacement you can have in your utils:
+```tsx
+const { isPending, isError, mutateAsync } = useMutation({
+  mutationFn: claimUsername,
+});
 
-```ts
-export function useServerFunction<TVariables, TData>(
-  fn: (variables: TVariables) => Promise<TData | void>,
-  callbacks?: {
-    onSuccess?: (variables: TVariables, data: TData | void) => void;
-    onError?: (error: Error) => void;
-  }
-) {
-  const [isPending, setIsPending] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
-
-  const execute = React.useCallback<(variables: TVariables) => void>(
-    async (variables) => {
-      setIsPending(true);
-      try {
-        const data = await fn(variables);
-        setIsError(false);
-        callbacks?.onSuccess?.(variables, data);
-      } catch (error) {
-        setIsError(true);
-        callbacks?.onError?.(
-          error instanceof Error ? error : new Error("Unknown error")
-        );
-      } finally {
-        setIsPending(false);
-      }
+function handleSubmit(values: UsernameRequestForm) {
+  toast.promise(mutateAsync(values), {
+    loading: `Submitting a claim for @${values.username}`,
+    success: (data) => {
+      form.reset();
+      return `You have successfully submitted a claim for: @${data.username}`;
     },
-    [fn, callbacks]
-  );
-
-  return { isPending, isError, execute };
+    error: (error) => {
+      return error instanceof Error ? error.message : "Unknown error";
+    },
+  });
 }
 ```
+
+### What if you are not using TanStack Query
+
+This would be a mistake. However, you are able to make use of `useTransition` and `useOptimistic` hooks to trigger a Server Action and handle the different UI states. Here is what you need to keep an eye for:
+
+* `useOptimistic` returns a tuple with a state and action. These actions can only be called within form's actions attributes or wrapped inside of a transition function.
+* `useTransition` returns a tuple with a boolean and a **non-blocking** UI transition function. Even if being used inside a form's submit attribute, a transition provides a state for all the actions and not the handler (as `useFormStatus` would) which is not the same.
+
+Let's make use of both of these hooks and call the Server Action directly without using TanStack Query Mutations.
+
+```tsx
+function handleSubmit(values: UsernameRequestForm) {
+  startTransition(() => {
+    addOptimisticRequest(values);
+    toast.promise(claimUsername(values), {
+      loading: `Submitting a claim for @${values.username}`,
+      success: (data) => {
+        form.reset();
+        setRequests([
+          ...requests,
+          {
+            ...data,
+            status: "Requested",
+          },
+        ]);
+        return `You have successfully submitted a claim for: @${data.username}`;
+      },
+      error: (error) => {
+        setRequests([
+          ...requests,
+          {
+            username: values.username,
+            status: "Error",
+          },
+        ]);
+        return error instanceof Error ? error.message : "Unknown error";
+      },
+    });
+  });
+}
+```
+
+Check out all the complete code snippets and the demo in [github.com/webscopeio/examples/tree/main/server-actions-resend](https://github.com/webscopeio/examples/tree/main/server-actions-resend)
 
 ## Will you give Server Actions a try?
 
