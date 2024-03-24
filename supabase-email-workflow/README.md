@@ -162,4 +162,6 @@ To wrap up, integrating a local Supabase setup with an email workflow is a game-
 - **Team Synergy**: Code configurations ease collaboration and version control, and streamlined email development aligns your team on user communication strategies.
 - **Quality Assurance**: With tools like React Email and Inbucket, you ensure your emails look great and work perfectly, enhancing the user experience.
 
+Check out all the complete code snippets and the demo in [github.com/webscopeio/examples/tree/main/supabase-email-workflow](https://github.com/webscopeio/examples/tree/main/supabase-email-workflow)
+
 Embrace this setup to boost your project's development workflow and deliver outstanding email communication. Give it a go, your project (and inbox) will thank you.
