@@ -128,6 +128,10 @@ export async function claimUsername(form: UsernameRequestForm) {
 
 Resend's SDK returns a `data` and `error` response in `CreateEmailResponse`. However, in this example we only make use of the error since the data only contains the email ID.
 
+**Important note on error handling**: Just like in Server Components when using Server Actions, if an error is thrown during production, Next will strip any sensitive information and provide a generic error message and digest for log reference. This is a security precaution to avoid leaking any sensitive information included in the error to the client. You can read more about it in: [Handling Server Errors](https://nextjs.org/docs/app/building-your-application/routing/error-handling#handling-server-errors)
+
+For the purposes of this article, we will continue working in development with unobscured error messages from Server Actions. If you do need to get specific error information from your errors, create and return an error object to the client.
+
 ### Handling States
 
 Since Server Actions are just functions, it is up to us to handle states in our UI to provide an appropriate feedback to our user. These are roughly the states the UI needs:
