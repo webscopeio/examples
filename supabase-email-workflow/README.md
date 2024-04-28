@@ -165,3 +165,4 @@ To wrap up, integrating a local Supabase setup with an email workflow is a game-
 Check out all the complete code snippets and the demo in [github.com/webscopeio/examples/tree/main/supabase-email-workflow](https://github.com/webscopeio/examples/tree/main/supabase-email-workflow)
 
 Embrace this setup to boost your project's development workflow and deliver outstanding email communication. Give it a go, your project (and inbox) will thank you.
+
