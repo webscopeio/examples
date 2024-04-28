@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  input {
+    @apply h-10 rounded p-3 w-full border;
+  }
+
+  button {
+    @apply border px-5 py-2 rounded text-white bg-slate-950 disabled:opacity-80 after:disabled:content-['...'];
+  }
+}
