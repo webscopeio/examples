@@ -2,9 +2,7 @@
 
 import { useActionState } from "react";
 
-type State =
-  | { data: string; status: "SUCCESS" }
-  | { status: "ERROR" | "INIT" };
+type State = { data: string; status: "SUCCESS" } | { status: "ERROR" | "INIT" };
 const initState: State = { status: "INIT" };
 
 export const FormAction = () => {
@@ -26,14 +24,15 @@ export const FormAction = () => {
         {action.status === "INIT" && <p>Awaiting action 🚀</p>}
         {action.status === "SUCCESS" && <p>Success, all good ✅</p>}
         {action.status === "ERROR" && <p>Error, please resubmit action ❌</p>}
+        <code>{JSON.stringify({ isPending })}</code>
+        <code>{JSON.stringify(action)}</code>
       </footer>
     </div>
   );
 };
 
-async function runAction(prevState: State, data: string) {
+async function runAction(_prevState: State, data: string) {
   return new Promise<State>((r) => {
-    console.log(prevState);
     setTimeout(
       () =>
         Math.random() < 0.5

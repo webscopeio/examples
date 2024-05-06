@@ -10,4 +10,8 @@
   button {
     @apply border px-5 py-2 rounded text-white bg-slate-950 disabled:opacity-80 after:disabled:content-['...'];
   }
+
+  code {
+    @apply text-sm block my-2;
+  }
 }
