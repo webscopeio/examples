@@ -82,9 +82,8 @@ export const FormAction = () => {
 The `runAction` function here is a mock, simulating an API call which randomly succeds or fails returning a new state, updating the form's status to either `SUCCESS` or `ERROR`. This could or could not be a [Server Action](https://www.webscope.io/blog/server-actions-resend).
 
 ```typescript
-async function runAction(prevState: State, data: string) {
+async function runAction(_prevState: State, data: string) {
   return new Promise<State>((r) => {
-    console.log(`prevState is`, prevState);
     setTimeout(
       () =>
         Math.random() < 0.5
